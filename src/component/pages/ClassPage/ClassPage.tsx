@@ -4,6 +4,7 @@ import {
   CharacterSubclass,
 } from "chivalry2-weapons/dist";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -15,6 +16,11 @@ export const ClassPage = ({ params: { class: classQuery } }: Props) => {
   const currentClass = ALL_TARGETS.find(
     (target) => target.characterClass === CharacterClass[classQuery],
   );
+
+  if (!currentClass) {
+    notFound();
+  }
+
   return (
     <main>
       <div>{currentClass?.characterClass}</div>

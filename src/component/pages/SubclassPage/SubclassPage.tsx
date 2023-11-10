@@ -1,5 +1,6 @@
 import { ALL_WEAPONS, CharacterSubclass } from "chivalry2-weapons/dist";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: {
@@ -12,6 +13,11 @@ export const SubclassPage = ({ params: { subclass } }: Props) => {
   const currentSubclassWeapons = ALL_WEAPONS.filter((weapon) =>
     weapon.subclasses.includes(currentSubclass),
   );
+
+  if (!currentSubclass || currentSubclassWeapons.length < 0) {
+    notFound();
+  }
+
   return (
     <main>
       <div>{currentSubclass}</div>
