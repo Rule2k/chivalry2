@@ -1,9 +1,1 @@
-export default function Home() {
-  return (
-    <main>
-      <div>
-        Chivarly 2
-      </div>
-    </main>
-  )
-}
+export { Homepage as default } from "@/component/pages/Homepage/Homepage";
