@@ -4,6 +4,9 @@
   align-items: center;
 }
 
-.subClasses {
+.weapons {
   display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
 }

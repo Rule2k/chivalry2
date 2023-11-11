@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./ClassesPage.module.scss";
+import { Links } from "@/component/common/Links/Links";
 
 interface Props {
   params: {
@@ -25,7 +26,7 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
 
   return (
     <main className={styles.root}>
-      <div>{currentClass?.characterClass}</div>
+      <h2>{currentClass?.characterClass}</h2>
       <div className={styles.subClasses}>
         {currentClass?.characterSubclasses.map((subClass) => {
           const subClassKey = (
@@ -47,9 +48,7 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
           );
         })}
       </div>
-      <CustomButton href={"/"} alternativeStyle>
-        Return to Homepage
-      </CustomButton>
+      <Links />
     </main>
   );
 };

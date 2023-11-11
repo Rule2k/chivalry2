@@ -1,7 +1,7 @@
 import { weaponById } from "chivalry2-weapons/dist";
 import { notFound } from "next/navigation";
 import styles from "./WeaponsPage.module.scss";
-import { CustomButton } from "@/component/common/CustomButton/CustomButton";
+import { Links } from "@/component/common/Links/Links";
 
 interface Props {
   params: {
@@ -18,10 +18,8 @@ export const WeaponsPage = ({ params: { weaponId } }: Props) => {
 
   return (
     <main className={styles.root}>
-      <div>{weapon?.name}</div>
-      <CustomButton href={"/"} alternativeStyle>
-        Return to the homepage
-      </CustomButton>
+      <h2>{weapon?.name}</h2>
+      <Links />
     </main>
   );
 };

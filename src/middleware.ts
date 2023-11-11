@@ -9,7 +9,6 @@ import {routes} from "../config/next/routes";
 // but the components receive them in uppercase as params
 
 export function middleware(request: NextRequest) {
-  console.log("middleware");
   const dynamicSegment = request.nextUrl.pathname.replace(routes.class, "");
   if (dynamicSegment) {
     return NextResponse.rewrite(
