@@ -1,6 +1,7 @@
 import { ALL_WEAPONS, CharacterSubclass } from "chivalry2-weapons/dist";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { routes } from "../../../../config/routes";
 
 interface Props {
   params: {
@@ -23,7 +24,7 @@ export const SubclassPage = ({ params: { subclass } }: Props) => {
       <div>{currentSubclass}</div>
       <div>
         {currentSubclassWeapons.map((weapon) => (
-          <Link key={weapon.id} href={`/weapons/${weapon.id}`}>
+          <Link key={weapon.id} href={`${routes.weapon}/${weapon.id}`}>
             {weapon.name}
           </Link>
         ))}

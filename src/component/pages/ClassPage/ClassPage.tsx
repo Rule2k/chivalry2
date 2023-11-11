@@ -5,6 +5,7 @@ import {
 } from "chivalry2-weapons/dist";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { routes } from "../../../../config/routes";
 
 interface Props {
   params: {
@@ -26,7 +27,7 @@ export const ClassPage = ({ params: { class: classQuery } }: Props) => {
       <div>{currentClass?.characterClass}</div>
       <div>
         {currentClass?.characterSubclasses.map((subClass) => {
-          const subClassQuery = (
+          const subClassKey = (
             Object.keys(CharacterSubclass) as (keyof typeof CharacterSubclass)[]
           ).find(
             (key: keyof typeof CharacterSubclass) =>
@@ -35,7 +36,9 @@ export const ClassPage = ({ params: { class: classQuery } }: Props) => {
 
           return (
             <Link
-              href={`/class/${classQuery.toLowerCase()}/${subClassQuery?.toLowerCase()}`}
+              href={`${
+                routes.class
+              }/${classQuery.toLowerCase()}/${subClassKey?.toLowerCase()}`}
               key={subClass}
             >
               {subClass}

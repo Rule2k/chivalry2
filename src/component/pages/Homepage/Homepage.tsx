@@ -1,5 +1,6 @@
 import { CharacterClass } from "chivalry2-weapons";
 import Link from "next/link";
+import { routes } from "../../../../config/routes";
 
 export const Homepage = () => (
   <main>
@@ -7,7 +8,7 @@ export const Homepage = () => (
       {Object.entries(CharacterClass).map(([key, value]) => {
         if (value !== CharacterClass.AVERAGE) {
           return (
-            <Link href={`/class/${key.toLowerCase()}`} key={key}>
+            <Link href={`${routes.class}/${key.toLowerCase()}`} key={key}>
               {value}
             </Link>
           );
