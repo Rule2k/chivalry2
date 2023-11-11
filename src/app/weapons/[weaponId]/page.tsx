@@ -1,1 +1,1 @@
-export { WeaponPage as default } from "@/component/pages/WeaponPage/WeaponPage";
+export { WeaponsPage as default } from "@/component/pages/WeaponsPage/WeaponsPage";

@@ -1,0 +1,14 @@
+@import 'config/scss/colors';
+
+.link {
+  background-color: $lightGrey;
+  color: $darkGrey;
+  padding: 16px;
+  width: max-content;
+  cursor: pointer;
+}
+
+.alternativeLink {
+  background-color: $yellow;
+  color: $darkGrey;
+}

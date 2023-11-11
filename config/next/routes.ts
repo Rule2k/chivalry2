@@ -1,4 +1,4 @@
 export const routes = {
-  class: "/class",
+  class: "/classes",
   weapon: "/weapons",
 };

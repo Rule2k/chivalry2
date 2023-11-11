@@ -1,9 +1,9 @@
 import type {NextRequest} from "next/server";
 import {NextResponse} from "next/server";
-import {routes} from "../config/routes";
+import {routes} from "../config/next/routes";
 
 // all dynamicSegment of the routes are written in lowerCase as to have consistent URLs
-// but since theses segmentName are the keys of an enum to map them to the correct class / subclass
+// but since theses segmentName are the keys of an enum to map them to the correct classes / subclasses
 // we need to have them in uppercase at the component level.
 // we use a middleware with .rewrite() to handle this, so the URLs are still displayed in lowerCase,
 // but the components receive them in uppercase as params
@@ -24,5 +24,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/class/:class*", "/class/:class/:subclass*"],
+  matcher: ["/classes/:class*", "/classes/:class/:subclass*"],
 };

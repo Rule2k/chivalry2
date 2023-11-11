@@ -3,9 +3,10 @@ import {
   CharacterClass,
   CharacterSubclass,
 } from "chivalry2-weapons/dist";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { routes } from "../../../../config/routes";
+import { routes } from "../../../../config/next/routes";
+import { CustomButton } from "@/component/common/CustomButton/CustomButton";
+import styles from "./ClassesPage.module.scss";
 
 interface Props {
   params: {
@@ -13,7 +14,7 @@ interface Props {
   };
 }
 
-export const ClassPage = ({ params: { class: classQuery } }: Props) => {
+export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
   const currentClass = ALL_TARGETS.find(
     (target) => target.characterClass === CharacterClass[classQuery],
   );
@@ -23,9 +24,9 @@ export const ClassPage = ({ params: { class: classQuery } }: Props) => {
   }
 
   return (
-    <main>
+    <main className={styles.root}>
       <div>{currentClass?.characterClass}</div>
-      <div>
+      <div className={styles.subClasses}>
         {currentClass?.characterSubclasses.map((subClass) => {
           const subClassKey = (
             Object.keys(CharacterSubclass) as (keyof typeof CharacterSubclass)[]
@@ -35,17 +36,20 @@ export const ClassPage = ({ params: { class: classQuery } }: Props) => {
           );
 
           return (
-            <Link
+            <CustomButton
               href={`${
                 routes.class
               }/${classQuery.toLowerCase()}/${subClassKey?.toLowerCase()}`}
               key={subClass}
             >
               {subClass}
-            </Link>
+            </CustomButton>
           );
         })}
       </div>
+      <CustomButton href={"/"} alternativeStyle>
+        Return to Homepage
+      </CustomButton>
     </main>
   );
 };
