@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.classes {
-  display: flex;
-  gap: 16px;
+  .classes {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+  }
 }

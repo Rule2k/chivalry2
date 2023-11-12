@@ -1,8 +1,14 @@
-import { ALL_WEAPONS, MeleeAttack, weaponById } from "chivalry2-weapons/dist";
+import {
+  ALL_WEAPONS,
+  CharacterClass,
+  MeleeAttack,
+  weaponById,
+} from "chivalry2-weapons/dist";
 import { Ratio } from "@/interfaces/ratio";
 import { Swing } from "chivalry2-weapons/dist/weapon";
 import { calculateRatio } from "@/utils/getWeaponRatio/calculateRatio";
 import { getFloorValue } from "@/utils/getWeaponRatio/getFloorValue";
+import { targetByName } from "chivalry2-weapons/dist/all_targets";
 
 type Values =
   | "range"
@@ -27,14 +33,17 @@ interface MinMaxWeaponStats {
   highest_staminaDamage: MeleeAttack["staminaDamage"];
 }
 
-export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
+export const getWeaponRatio = (
+  weaponId: string,
+  targetClass: CharacterClass,
+): null | Ratio[] => {
   const currentWeapon = weaponById(weaponId);
+  const currentTarget = targetByName(targetClass);
 
-  if (!currentWeapon) return null;
-
+  if (!currentWeapon || !currentTarget) return null;
   // get the best average numbers of all weapons
   const averageMinMaxWeaponsStats: MinMaxWeaponStats = ALL_WEAPONS.reduce(
-    (acc: MinMaxWeaponStats, curr) => {
+    (acc: MinMaxWeaponStats, weapon) => {
       const values: Values[] = [
         "range",
         "damage",
@@ -46,7 +55,7 @@ export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
 
       const floorTypes = ["lowest_", "highest_"];
 
-      const { average } = curr.attacks;
+      const { average } = weapon.attacks;
 
       values.forEach((value) => {
         floorTypes.forEach((floorType) => {
@@ -56,6 +65,9 @@ export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
               ? average.range + average.altRange
               : average.heavy[value] + average.light[value],
             acc[key as keyof MinMaxWeaponStats],
+            value === "damage"
+              ? currentTarget.damageMultiplier(weapon.damageType)
+              : 1,
             floorType === floorTypes[0],
           );
         });
@@ -83,6 +95,10 @@ export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
     attacks: { average },
   } = currentWeapon;
 
+  const currentWeaponDamageMultiplier = currentTarget.damageMultiplier(
+    currentWeapon.damageType,
+  );
+
   // return the ratio of the current weapon vs the highest of all weapons
   return [
     {
@@ -99,6 +115,7 @@ export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
         averageMinMaxWeaponsStats.highest_damage,
         averageMinMaxWeaponsStats.lowest_damage,
         average.light.damage + average.heavy.damage,
+        currentWeaponDamageMultiplier,
       ),
     },
     {

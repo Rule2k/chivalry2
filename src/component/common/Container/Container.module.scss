@@ -1,0 +1,15 @@
+@import "config/scss/colors";
+@import "config/scss/shadows";
+@import "config/scss/border";
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: $borderRadius;
+  padding: 32px;
+  background-color: $darkerGrey;
+  box-shadow: $boxShadow;
+}

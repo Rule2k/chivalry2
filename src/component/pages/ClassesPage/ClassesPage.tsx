@@ -8,6 +8,7 @@ import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./ClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
+import { Container } from "@/component/common/Container/Container";
 
 interface Props {
   params: {
@@ -26,8 +27,8 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
 
   return (
     <main className={styles.root}>
-      <h2>{currentClass?.characterClass}</h2>
-      <div className={styles.subClasses}>
+      <h2>{`Select your ${currentClass?.characterClass} subclass`}</h2>
+      <Container className={styles.subClasses}>
         {currentClass?.characterSubclasses.map((subClass) => {
           const subClassKey = (
             Object.keys(CharacterSubclass) as (keyof typeof CharacterSubclass)[]
@@ -47,7 +48,7 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
             </CustomButton>
           );
         })}
-      </div>
+      </Container>
       <Links />
     </main>
   );

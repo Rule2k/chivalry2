@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.weapons {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  justify-content: center;
+  .weapons {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

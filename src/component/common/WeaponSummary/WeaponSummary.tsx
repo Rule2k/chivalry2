@@ -1,17 +1,30 @@
+"use client";
 import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
-import { Weapon } from "chivalry2-weapons/dist";
-import { Ratio } from "@/interfaces/ratio";
+import { CharacterClass, Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponSummary.module.scss";
+import { Container } from "@/component/common/Container/Container";
+import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
+import { notFound } from "next/navigation";
+import { useState } from "react";
+import { TargetSelection } from "@/component/common/WeaponSummary/components/TargetSelection/TargetSelection";
 
 interface Props {
   weapon: Weapon;
-  ratios: Ratio[];
 }
 
-export const WeaponSummary = ({ weapon, ratios }: Props) => {
+export const WeaponSummary = ({ weapon }: Props) => {
+  const [targetClass, setTargetClass] = useState<CharacterClass>(
+    CharacterClass.ARCHER,
+  );
+  const ratios = getWeaponRatio(weapon.id, targetClass);
+
+  if (!ratios) {
+    notFound();
+  }
+
   return (
-    <div className={styles.weaponSummary}>
+    <Container>
       <CustomButton
         key={weapon.id}
         href={`${routes.weapon}/${weapon.id}`}
@@ -19,6 +32,11 @@ export const WeaponSummary = ({ weapon, ratios }: Props) => {
       >
         {weapon.name}
       </CustomButton>
+      <TargetSelection
+        onClick={setTargetClass}
+        currentTarget={targetClass}
+        className={styles.targetSelection}
+      />
       <div className={styles.charts}>
         {ratios.map(({ name, value }) => {
           return (
@@ -36,6 +54,6 @@ export const WeaponSummary = ({ weapon, ratios }: Props) => {
           );
         })}
       </div>
-    </div>
+    </Container>
   );
 };

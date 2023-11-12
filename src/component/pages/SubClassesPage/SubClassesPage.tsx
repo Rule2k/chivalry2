@@ -2,9 +2,8 @@ import { ALL_WEAPONS, CharacterSubclass } from "chivalry2-weapons/dist";
 import { notFound } from "next/navigation";
 import styles from "./SubClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
-import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
-import { WeaponSummary } from "@/component/ui/WeaponSummary/WeaponSummary";
-import { Ratio } from "@/interfaces/ratio";
+import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
+import { Explanation } from "@/component/pages/SubClassesPage/components/Explanation/Explanation";
 
 interface Props {
   params: {
@@ -27,17 +26,11 @@ export const SubClassesPage = ({ params }: Props) => {
 
   return (
     <main className={styles.root}>
-      <h2>{currentSubclass}</h2>
+      <h2>{`Select your ${currentSubclass} weapon`}</h2>
+      <Explanation />
       <div className={styles.weapons}>
         {currentSubclassWeapons.map((weapon) => {
-          const ratios = getWeaponRatio(weapon.id);
-          return (
-            <WeaponSummary
-              weapon={weapon}
-              ratios={ratios as Ratio[]}
-              key={weapon.id}
-            />
-          );
+          return <WeaponSummary weapon={weapon} key={weapon.id} />;
         })}
       </div>
       <Links params={params} />
