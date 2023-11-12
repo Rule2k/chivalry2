@@ -4,6 +4,7 @@ import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./SubClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
+import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
 
 interface Props {
   params: {
@@ -28,11 +29,18 @@ export const SubClassesPage = ({ params }: Props) => {
     <main className={styles.root}>
       <h2>{currentSubclass}</h2>
       <div className={styles.weapons}>
-        {currentSubclassWeapons.map((weapon) => (
-          <CustomButton key={weapon.id} href={`${routes.weapon}/${weapon.id}`}>
-            {weapon.name}
-          </CustomButton>
-        ))}
+        {currentSubclassWeapons.map((weapon) => {
+          const weaponRatio = getWeaponRatio(weapon.id);
+          console.log(weaponRatio);
+          return (
+            <CustomButton
+              key={weapon.id}
+              href={`${routes.weapon}/${weapon.id}`}
+            >
+              {weapon.name}
+            </CustomButton>
+          );
+        })}
       </div>
       <Links params={params} />
     </main>
