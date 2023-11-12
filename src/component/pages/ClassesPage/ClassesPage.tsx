@@ -1,5 +1,6 @@
 import {
   ALL_TARGETS,
+  ALL_WEAPONS,
   CharacterClass,
   CharacterSubclass,
 } from "chivalry2-weapons/dist";
@@ -9,6 +10,7 @@ import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./ClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
 import { Container } from "@/component/common/Container/Container";
+import { WeaponsList } from "@/component/common/WeaponsList/WeaponsList";
 
 interface Props {
   params: {
@@ -20,14 +22,19 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
   const currentClass = ALL_TARGETS.find(
     (target) => target.characterClass === CharacterClass[classQuery],
   );
+  const currentWeapons = ALL_WEAPONS.filter((weapon) =>
+    weapon.classes.includes(CharacterClass[classQuery]),
+  );
 
   if (!currentClass) {
     notFound();
   }
 
+  const currentClassLowerCase = currentClass.characterClass.toLowerCase();
+
   return (
     <main className={styles.root}>
-      <h2>{`Select your ${currentClass?.characterClass} subclass`}</h2>
+      <h2>{`Select your ${currentClassLowerCase} subclass`}</h2>
       <Container className={styles.subClasses}>
         {currentClass?.characterSubclasses.map((subClass) => {
           const subClassKey = (
@@ -49,6 +56,10 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
           );
         })}
       </Container>
+      <WeaponsList
+        weaponsList={currentWeapons}
+        title={`All the ${currentClassLowerCase} weapons :`}
+      />
       <Links />
     </main>
   );

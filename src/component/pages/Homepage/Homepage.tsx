@@ -3,6 +3,8 @@ import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./Homepage.module.scss";
 import { Container } from "@/component/common/Container/Container";
+import { WeaponsList } from "@/component/common/WeaponsList/WeaponsList";
+import { ALL_WEAPONS } from "chivalry2-weapons/dist";
 
 export const Homepage = () => (
   <main className={styles.root}>
@@ -21,5 +23,6 @@ export const Homepage = () => (
         }
       })}
     </Container>
+    <WeaponsList weaponsList={ALL_WEAPONS} title={"All the weapons :"} />
   </main>
 );

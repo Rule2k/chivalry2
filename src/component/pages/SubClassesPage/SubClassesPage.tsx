@@ -2,8 +2,7 @@ import { ALL_WEAPONS, CharacterSubclass } from "chivalry2-weapons/dist";
 import { notFound } from "next/navigation";
 import styles from "./SubClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
-import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
-import { Explanation } from "@/component/pages/SubClassesPage/components/Explanation/Explanation";
+import { WeaponsList } from "@/component/common/WeaponsList/WeaponsList";
 
 interface Props {
   params: {
@@ -24,15 +23,12 @@ export const SubClassesPage = ({ params }: Props) => {
     notFound();
   }
 
+  const currentSubclassLowerCase = currentSubclass.toLowerCase();
+
   return (
     <main className={styles.root}>
-      <h2>{`Select your ${currentSubclass} weapon`}</h2>
-      <Explanation />
-      <div className={styles.weapons}>
-        {currentSubclassWeapons.map((weapon) => {
-          return <WeaponSummary weapon={weapon} key={weapon.id} />;
-        })}
-      </div>
+      <h2>{`Select your ${currentSubclassLowerCase} weapon`}</h2>
+      <WeaponsList weaponsList={currentSubclassWeapons} />
       <Links params={params} />
     </main>
   );
