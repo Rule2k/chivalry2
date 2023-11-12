@@ -1,7 +1,6 @@
 @import 'config/scss/colors';
 
 .root {
-  background-color: #101010;
   background-image: url('../../public/assets/background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -22,7 +21,8 @@
     flex-direction: column;
     align-items: center;
     opacity: 0.95;
-    height: 100%;
+    height: max-content;
+    min-height: 100%;
     margin: 0;
 
     a {

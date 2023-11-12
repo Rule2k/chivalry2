@@ -1,84 +1,97 @@
 import { ALL_WEAPONS, weaponById } from "chivalry2-weapons/dist";
+import { Ratio } from "@/interfaces/ratio";
 
-export const getWeaponRatio = (weaponId: string) => {
+export const getWeaponRatio = (weaponId: string): null | Ratio[] => {
   const currentWeapon = weaponById(weaponId);
 
-  if (!currentWeapon) return;
+  if (!currentWeapon) return null;
 
-  const bestAverageNumbers = ALL_WEAPONS.reduce(
+  const getFloorValue = (
+    currentValue: number,
+    accumulatorValue: number,
+    getMinValue?: boolean,
+  ) => {
+    if (getMinValue) {
+      return Math.min(currentValue / 2, accumulatorValue);
+    }
+    return Math.max(currentValue / 2, accumulatorValue);
+  };
+
+  // get the best average numbers of all weapons
+  const averageMinMaxWeaponsStats = ALL_WEAPONS.reduce(
     (previousValue, currentValue) => {
       const { average } = currentValue.attacks;
-      let {
-        highestAverageRange,
-        highestAverageHeavyDamage,
-        lowestAverageHeavyWindup,
-        lowestAverageHeavyRelease,
-        lowestAverageHeavyRecovery,
-        highestAverageLightDamage,
-        lowestAverageLightWindup,
-        lowestAverageLightRelease,
-        lowestAverageLightRecovery,
-      } = previousValue;
-
-      highestAverageRange =
-        highestAverageRange > average.range
-          ? highestAverageRange
-          : average.range;
-      highestAverageHeavyDamage =
-        highestAverageHeavyDamage > average.heavy.damage
-          ? highestAverageHeavyDamage
-          : average.heavy.damage;
-      lowestAverageHeavyWindup =
-        lowestAverageHeavyWindup < average.heavy.windup
-          ? lowestAverageHeavyWindup
-          : average.heavy.windup;
-      lowestAverageHeavyRelease =
-        lowestAverageHeavyRelease < average.heavy.release
-          ? lowestAverageHeavyRelease
-          : average.heavy.release;
-      lowestAverageHeavyRecovery =
-        lowestAverageHeavyRecovery < average.heavy.recovery
-          ? lowestAverageHeavyRecovery
-          : average.heavy.recovery;
-      highestAverageLightDamage =
-        highestAverageLightDamage > average.light.damage
-          ? highestAverageLightDamage
-          : average.light.damage;
-      lowestAverageLightWindup =
-        lowestAverageLightWindup < average.light.windup
-          ? lowestAverageLightWindup
-          : average.light.windup;
-      lowestAverageLightRelease =
-        lowestAverageLightRelease < average.light.release
-          ? lowestAverageLightRelease
-          : average.light.release;
-      lowestAverageLightRecovery =
-        lowestAverageLightRecovery < average.light.recovery
-          ? lowestAverageLightRecovery
-          : average.light.recovery;
 
       return {
-        highestAverageRange,
-        highestAverageHeavyDamage,
-        lowestAverageHeavyWindup,
-        lowestAverageHeavyRelease,
-        lowestAverageHeavyRecovery,
-        highestAverageLightDamage,
-        lowestAverageLightWindup,
-        lowestAverageLightRelease,
-        lowestAverageLightRecovery,
+        averageLowestRange: getFloorValue(
+          average.range + average.altRange,
+          previousValue.averageLowestRange,
+          true,
+        ),
+        averageHighestRange: getFloorValue(
+          average.range + average.altRange,
+          previousValue.averageHighestRange,
+        ),
+        averageLowestDamage: getFloorValue(
+          average.light.damage + average.heavy.damage,
+          previousValue.averageLowestDamage,
+          true,
+        ),
+        averageHighestDamage: getFloorValue(
+          average.light.damage + average.heavy.damage,
+          previousValue.averageHighestDamage,
+        ),
+        averageLowestWindup: getFloorValue(
+          average.light.windup + average.heavy.windup,
+          previousValue.averageLowestWindup,
+          true,
+        ),
+        averageHighestWindup: getFloorValue(
+          average.light.windup + average.heavy.windup,
+          previousValue.averageHighestWindup,
+        ),
+        averageLowestRelease: getFloorValue(
+          average.light.release + average.heavy.release,
+          previousValue.averageLowestRelease,
+          true,
+        ),
+        averageHighestRelease: getFloorValue(
+          average.light.release + average.heavy.release,
+          previousValue.averageHighestRelease,
+        ),
+        averageLowestRecovery: getFloorValue(
+          average.light.recovery + average.heavy.recovery,
+          previousValue.averageLowestRecovery,
+          true,
+        ),
+        averageHighestRecovery: getFloorValue(
+          average.light.recovery + average.heavy.recovery,
+          previousValue.averageHighestRecovery,
+        ),
+        averageLowestStamina: getFloorValue(
+          average.light.staminaDamage + average.heavy.staminaDamage,
+          previousValue.averageLowestStamina,
+          true,
+        ),
+        averageHighestStamina: getFloorValue(
+          average.light.staminaDamage + average.heavy.staminaDamage,
+          previousValue.averageHighestStamina,
+        ),
       };
     },
     {
-      highestAverageRange: 0,
-      highestAverageHeavyDamage: 0,
-      lowestAverageHeavyWindup: Infinity,
-      lowestAverageHeavyRelease: Infinity,
-      lowestAverageHeavyRecovery: Infinity,
-      highestAverageLightDamage: 0,
-      lowestAverageLightWindup: Infinity,
-      lowestAverageLightRelease: Infinity,
-      lowestAverageLightRecovery: Infinity,
+      averageLowestRange: Infinity,
+      averageHighestRange: 0,
+      averageLowestDamage: Infinity,
+      averageHighestDamage: 0,
+      averageLowestWindup: Infinity,
+      averageHighestWindup: 0,
+      averageLowestRelease: Infinity,
+      averageHighestRelease: 0,
+      averageLowestRecovery: Infinity,
+      averageHighestRecovery: 0,
+      averageLowestStamina: Infinity,
+      averageHighestStamina: 0,
     },
   );
 
@@ -86,23 +99,66 @@ export const getWeaponRatio = (weaponId: string) => {
     attacks: { average },
   } = currentWeapon;
 
-  return {
-    rangeRatio: average.range / bestAverageNumbers.highestAverageRange,
-    heavyDamageRatio:
-      average.heavy.damage / bestAverageNumbers.highestAverageHeavyDamage,
-    heavyWindupRatio:
-      bestAverageNumbers.lowestAverageHeavyWindup / average.heavy.windup,
-    heavyReleaseRatio:
-      bestAverageNumbers.lowestAverageHeavyRelease / average.heavy.release,
-    heavyRecoveryRatio:
-      bestAverageNumbers.lowestAverageHeavyRecovery / average.heavy.recovery,
-    lightDamageRatio:
-      average.light.damage / bestAverageNumbers.highestAverageLightDamage,
-    lightWindupRatio:
-      bestAverageNumbers.lowestAverageLightWindup / average.light.windup,
-    lightReleaseRatio:
-      bestAverageNumbers.lowestAverageLightRelease / average.light.release,
-    lightRecoveryRatio:
-      bestAverageNumbers.lowestAverageLightRecovery / average.light.recovery,
-  };
+  function calculateRatio(
+    maximum: number,
+    minimum: number,
+    current: number,
+  ): number {
+    const range = maximum - minimum;
+    const relativeValue = current / 2 - minimum;
+
+    return relativeValue / range;
+  }
+
+  // return the ratio of the current weapon vs the highest of all weapons
+  return [
+    {
+      name: "Range",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageHighestRange,
+        averageMinMaxWeaponsStats.averageLowestRange,
+        average.range + average.altRange,
+      ),
+    },
+    {
+      name: "Damage",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageHighestDamage,
+        averageMinMaxWeaponsStats.averageLowestDamage,
+        average.light.damage + average.heavy.damage,
+      ),
+    },
+    {
+      name: "Windup time",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageLowestWindup,
+        averageMinMaxWeaponsStats.averageHighestWindup,
+        average.light.windup + average.heavy.windup,
+      ),
+    },
+    {
+      name: "Release time",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageLowestRelease,
+        averageMinMaxWeaponsStats.averageHighestRelease,
+        average.light.release + average.heavy.release,
+      ),
+    },
+    {
+      name: "Recovery time",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageLowestRecovery,
+        averageMinMaxWeaponsStats.averageHighestRecovery,
+        average.light.recovery + average.heavy.recovery,
+      ),
+    },
+    {
+      name: "Stamina damage",
+      value: calculateRatio(
+        averageMinMaxWeaponsStats.averageHighestStamina,
+        averageMinMaxWeaponsStats.averageLowestStamina,
+        average.light.staminaDamage + average.heavy.staminaDamage,
+      ),
+    },
+  ];
 };
