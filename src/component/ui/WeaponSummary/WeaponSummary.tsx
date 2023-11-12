@@ -19,11 +19,11 @@ export const WeaponSummary = ({ weapon, ratios }: Props) => {
       >
         {weapon.name}
       </CustomButton>
-      <div>
+      <div className={styles.charts}>
         {ratios.map(({ name, value }) => {
           return (
-            <div key={name}>
-              <div>{name}</div>
+            <div key={name} className={styles.chart}>
+              <div className={styles.chartName}>{name}</div>
               <div className={styles.progressBar}>
                 <div
                   className={styles.progressBarValue}

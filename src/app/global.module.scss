@@ -9,18 +9,17 @@
   background-attachment: fixed;
   display: flex;
   justify-content: center;
-  font-size: 14px;;
+  font-size: 14px;
 
   .body {
-    padding: 0 32px;
-    background-color: $darkGrey;
+    padding: 0 32px 32px;
+    background-color: rgba($darkGrey, .9);
     color: $lightGrey;
     width: 100%;
     max-width: 1024px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    opacity: 0.95;
     height: max-content;
     min-height: 100%;
     margin: 0;
