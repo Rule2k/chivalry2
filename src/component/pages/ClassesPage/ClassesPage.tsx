@@ -34,7 +34,7 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
 
   return (
     <main className={styles.root}>
-      <h2>{`Select your ${currentClassLowerCase} subclass`}</h2>
+      <h2>{`Select your ${currentClassLowerCase} subclass:`}</h2>
       <Container className={styles.subClasses}>
         {currentClass?.characterSubclasses.map((subClass) => {
           const subClassKey = (
@@ -56,10 +56,7 @@ export const ClassesPage = ({ params: { class: classQuery } }: Props) => {
           );
         })}
       </Container>
-      <WeaponsList
-        weaponsList={currentWeapons}
-        title={`All the ${currentClassLowerCase} weapons :`}
-      />
+      <WeaponsList weaponsList={currentWeapons} />
       <Links />
     </main>
   );

@@ -27,8 +27,10 @@ export const SubClassesPage = ({ params }: Props) => {
 
   return (
     <main className={styles.root}>
-      <h2>{`Select your ${currentSubclassLowerCase} weapon`}</h2>
-      <WeaponsList weaponsList={currentSubclassWeapons} />
+      <WeaponsList
+        weaponsList={currentSubclassWeapons}
+        className={styles.weaponsList}
+      />
       <Links params={params} />
     </main>
   );

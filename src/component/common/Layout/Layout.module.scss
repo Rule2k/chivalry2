@@ -1,7 +1,7 @@
 @import 'config/scss/colors';
 
 .root {
-  background-image: url('../../public/assets/background.jpg');
+  background-image: url('../../../../public/assets/background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;
@@ -36,6 +36,11 @@
       width: 100%;
       padding: 0 32px;
       max-width: 600px;
+    }
+
+    .footer {
+      max-width: 600px;
+      margin-top: 32px;
     }
   }
 }

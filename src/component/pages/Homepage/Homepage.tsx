@@ -8,7 +8,7 @@ import { ALL_WEAPONS } from "chivalry2-weapons/dist";
 
 export const Homepage = () => (
   <main className={styles.root}>
-    <h2>Select your class</h2>
+    <h2>Select your class:</h2>
     <Container className={styles.classes}>
       {Object.entries(CharacterClass).map(([key, value]) => {
         if (value !== CharacterClass.AVERAGE) {
@@ -23,6 +23,6 @@ export const Homepage = () => (
         }
       })}
     </Container>
-    <WeaponsList weaponsList={ALL_WEAPONS} title={"All the weapons :"} />
+    <WeaponsList weaponsList={ALL_WEAPONS} />
   </main>
 );

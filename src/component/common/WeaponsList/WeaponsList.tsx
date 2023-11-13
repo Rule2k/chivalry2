@@ -2,16 +2,16 @@
 import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
 import { Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponsList.module.scss";
-import { Explanation } from "@/component/common/WeaponsList/Explanation/Explanation";
 import { useState } from "react";
 import { SearchInput } from "@/component/common/WeaponsList/SearchInput/SearchInput";
+import classNames from "classnames";
 
 interface Props {
   weaponsList: Weapon[];
-  title?: string;
+  className?: string;
 }
 
-export const WeaponsList = ({ weaponsList, title }: Props) => {
+export const WeaponsList = ({ weaponsList, className }: Props) => {
   const [filteredList, setFilteredList] = useState<Weapon[]>(weaponsList);
   const [currentSearchValue, setSearchCurrentValue] = useState<string>("");
 
@@ -25,9 +25,7 @@ export const WeaponsList = ({ weaponsList, title }: Props) => {
   };
 
   return (
-    <div className={styles.weaponsList}>
-      <h2>{title}</h2>
-      <Explanation />
+    <div className={classNames(styles.weaponsList, className)}>
       <SearchInput
         onChange={handleSearch}
         currentValue={currentSearchValue}

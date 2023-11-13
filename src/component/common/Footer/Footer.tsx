@@ -1,7 +1,12 @@
-import styles from "./Explanation.module.scss";
+import styles from "./Footer.module.scss";
+import classNames from "classnames";
 
-export const Explanation = () => (
-  <p className={styles.root}>
+interface Props {
+  className?: string;
+}
+
+export const Footer = ({ className }: Props) => (
+  <p className={classNames(styles.root, className)}>
     Values are compared to the best and worst statistics among all weapons.
     <br />
     <br />
