@@ -1,0 +1,20 @@
+@import "../../../../../../config/scss/colors";
+
+.tooltip {
+  position: relative;
+  height: 100%;
+  cursor: pointer;
+
+  .tooltipContent {
+    position: absolute;
+    background-color: $yellow;
+    color: $darkGrey;
+    height: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    font-weight: 700;
+  }
+}

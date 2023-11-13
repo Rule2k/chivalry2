@@ -8,6 +8,7 @@ import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { TargetSelection } from "@/component/common/WeaponSummary/components/TargetSelection/TargetSelection";
+import { Hover } from "@/component/common/WeaponSummary/components/Hover/Hover";
 
 interface Props {
   weapon: Weapon;
@@ -42,14 +43,16 @@ export const WeaponSummary = ({ weapon }: Props) => {
           return (
             <div key={name} className={styles.chart}>
               <div className={styles.chartName}>{name}</div>
-              <div className={styles.progressBar}>
-                <div
-                  className={styles.progressBarValue}
-                  style={{
-                    width: `${Math.round(value * 100)}%`,
-                  }}
-                />
-              </div>
+              <Hover tooltipText={`${Math.round(value * 100)}%`}>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressBarValue}
+                    style={{
+                      width: `${Math.round(value * 100)}%`,
+                    }}
+                  />
+                </div>
+              </Hover>
             </div>
           );
         })}

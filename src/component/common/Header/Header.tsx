@@ -13,6 +13,7 @@ export const Header = () => (
         height={180}
         alt="Picture of the author"
         className={styles.image}
+        priority
       />
     </Link>
     <h1>WEAPONS STATS</h1>
