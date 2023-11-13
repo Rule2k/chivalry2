@@ -10,27 +10,23 @@ import { calculateRatio } from "@/utils/getWeaponRatio/calculateRatio";
 import { getFloorValue } from "@/utils/getWeaponRatio/getFloorValue";
 import { targetByName } from "chivalry2-weapons/dist/all_targets";
 
-type Values =
-  | "range"
-  | "damage"
-  | "windup"
-  | "release"
-  | "recovery"
-  | "staminaDamage";
+interface MeleeAttackType<T extends keyof MeleeAttack> {
+  highest: MeleeAttack[T];
+  lowest: MeleeAttack[T];
+}
+
+interface SwingType<T extends keyof Swing> {
+  highest: Swing[T];
+  lowest: Swing[T];
+}
 
 interface MinMaxWeaponStats {
-  lowest_range: Swing["range"];
-  highest_range: Swing["range"];
-  lowest_damage: MeleeAttack["damage"];
-  highest_damage: MeleeAttack["damage"];
-  lowest_windup: MeleeAttack["windup"];
-  highest_windup: MeleeAttack["windup"];
-  lowest_release: MeleeAttack["release"];
-  highest_release: MeleeAttack["release"];
-  lowest_recovery: MeleeAttack["recovery"];
-  highest_recovery: MeleeAttack["recovery"];
-  lowest_staminaDamage: MeleeAttack["staminaDamage"];
-  highest_staminaDamage: MeleeAttack["staminaDamage"];
+  damage: MeleeAttackType<"damage">;
+  range: SwingType<"range"> | SwingType<"altRange">;
+  staminaDamage: MeleeAttackType<"staminaDamage">;
+  windup: MeleeAttackType<"windup">;
+  release: MeleeAttackType<"release">;
+  recovery: MeleeAttackType<"recovery">;
 }
 
 export const getWeaponRatio = (
@@ -41,30 +37,30 @@ export const getWeaponRatio = (
   const currentTarget = targetByName(targetClass);
 
   if (!currentWeapon || !currentTarget) return null;
+
+  const values: (keyof MinMaxWeaponStats)[] = [
+    "range",
+    "damage",
+    "windup",
+    "release",
+    "recovery",
+    "staminaDamage",
+  ];
+
   // get the best average numbers of all weapons
   const averageMinMaxWeaponsStats: MinMaxWeaponStats = ALL_WEAPONS.reduce(
     (acc: MinMaxWeaponStats, weapon) => {
-      const values: Values[] = [
-        "range",
-        "damage",
-        "windup",
-        "release",
-        "recovery",
-        "staminaDamage",
-      ];
-
-      const floorTypes = ["lowest_", "highest_"];
+      const floorTypes: (keyof SwingType<any>)[] = ["lowest", "highest"];
 
       const { average } = weapon.attacks;
 
       values.forEach((value) => {
         floorTypes.forEach((floorType) => {
-          const key = `${floorType}${value}`;
-          acc[key as keyof MinMaxWeaponStats] = getFloorValue(
+          acc[value][floorType] = getFloorValue(
             value === "range"
               ? average.range + average.altRange
               : average.heavy[value] + average.light[value],
-            acc[key as keyof MinMaxWeaponStats],
+            acc[value][floorType],
             value === "damage"
               ? currentTarget.damageMultiplier(weapon.damageType)
               : 1,
@@ -76,18 +72,30 @@ export const getWeaponRatio = (
       return acc;
     },
     {
-      lowest_range: Infinity,
-      highest_range: 0,
-      lowest_damage: Infinity,
-      highest_damage: 0,
-      lowest_windup: Infinity,
-      highest_windup: 0,
-      lowest_release: Infinity,
-      highest_release: 0,
-      lowest_recovery: Infinity,
-      highest_recovery: 0,
-      lowest_staminaDamage: Infinity,
-      highest_staminaDamage: 0,
+      range: {
+        highest: 0,
+        lowest: Infinity,
+      },
+      damage: {
+        highest: 0,
+        lowest: Infinity,
+      },
+      windup: {
+        highest: 0,
+        lowest: Infinity,
+      },
+      release: {
+        highest: 0,
+        lowest: Infinity,
+      },
+      recovery: {
+        highest: 0,
+        lowest: Infinity,
+      },
+      staminaDamage: {
+        highest: 0,
+        lowest: Infinity,
+      },
     },
   );
 
@@ -99,56 +107,62 @@ export const getWeaponRatio = (
     currentWeapon.damageType,
   );
 
-  // return the ratio of the current weapon vs the highest of all weapons
-  return [
-    {
-      name: "Range",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.highest_range,
-        averageMinMaxWeaponsStats.lowest_range,
-        average.range + average.altRange,
-      ),
-    },
-    {
+  const valueNameAndValueType: Record<
+    keyof MinMaxWeaponStats,
+    { name: string; isLowerBetter: boolean }
+  > = {
+    damage: {
       name: "Damage",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.highest_damage,
-        averageMinMaxWeaponsStats.lowest_damage,
-        average.light.damage + average.heavy.damage,
-        currentWeaponDamageMultiplier,
-      ),
+      isLowerBetter: false,
     },
-    {
-      name: "Windup time",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.lowest_windup,
-        averageMinMaxWeaponsStats.highest_windup,
-        average.light.windup + average.heavy.windup,
-      ),
+    range: {
+      name: "Range",
+      isLowerBetter: false,
     },
-    {
-      name: "Release time",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.lowest_release,
-        averageMinMaxWeaponsStats.highest_release,
-        average.light.release + average.heavy.release,
-      ),
-    },
-    {
-      name: "Recovery time",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.lowest_recovery,
-        averageMinMaxWeaponsStats.highest_recovery,
-        average.light.recovery + average.heavy.recovery,
-      ),
-    },
-    {
+    staminaDamage: {
       name: "Stamina damage",
-      value: calculateRatio(
-        averageMinMaxWeaponsStats.highest_staminaDamage,
-        averageMinMaxWeaponsStats.lowest_staminaDamage,
-        average.light.staminaDamage + average.heavy.staminaDamage,
-      ),
+      isLowerBetter: false,
     },
-  ];
+    windup: {
+      name: "Windup time",
+      isLowerBetter: true,
+    },
+    release: {
+      name: "Release time",
+      isLowerBetter: true,
+    },
+    recovery: {
+      name: "Recovery delay",
+      isLowerBetter: true,
+    },
+  };
+
+  return values.map((key) => {
+    if (key === "range") {
+      return {
+        name: "Range",
+        ratio: calculateRatio(
+          averageMinMaxWeaponsStats.range.highest,
+          averageMinMaxWeaponsStats.range.lowest,
+          average.range + average.altRange,
+        ),
+        value: Math.round((average.range + average.altRange) / 2),
+      };
+    }
+
+    return {
+      name: valueNameAndValueType[key].name,
+      ratio: calculateRatio(
+        valueNameAndValueType[key].isLowerBetter
+          ? averageMinMaxWeaponsStats[key].lowest
+          : averageMinMaxWeaponsStats[key].highest,
+        valueNameAndValueType[key].isLowerBetter
+          ? averageMinMaxWeaponsStats[key].highest
+          : averageMinMaxWeaponsStats[key].lowest,
+        average.light[key] + average.heavy[key],
+        key === "damage" ? currentWeaponDamageMultiplier : 1,
+      ),
+      value: Math.round((average.light[key] + average.heavy[key]) / 2),
+    };
+  });
 };

@@ -39,16 +39,16 @@ export const WeaponSummary = ({ weapon }: Props) => {
         className={styles.targetSelection}
       />
       <div className={styles.charts}>
-        {ratios.map(({ name, value }) => {
+        {ratios.map(({ name, value, ratio }) => {
           return (
             <div key={name} className={styles.chart}>
               <div className={styles.chartName}>{name}</div>
-              <Hover tooltipText={`${Math.round(value * 100)}%`}>
+              <Hover tooltipText={`${ratio}%: ${value}`}>
                 <div className={styles.progressBar}>
                   <div
                     className={styles.progressBarValue}
                     style={{
-                      width: `${Math.round(value * 100)}%`,
+                      width: `${ratio}%`,
                     }}
                   />
                 </div>
