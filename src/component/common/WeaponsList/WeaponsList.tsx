@@ -2,9 +2,10 @@
 import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
 import { Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponsList.module.scss";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SearchInput } from "@/component/common/WeaponsList/SearchInput/SearchInput";
 import classNames from "classnames";
+import { getAverageMinMaxWeaponsStats } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
 
 interface Props {
   weaponsList: Weapon[];
@@ -24,6 +25,11 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
     );
   };
 
+  const averageMinMaxWeaponsStats = useMemo(
+    () => getAverageMinMaxWeaponsStats(),
+    [],
+  );
+
   return (
     <div className={classNames(styles.weaponsList, className)}>
       <SearchInput
@@ -32,9 +38,13 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
         className={styles.searchInput}
       />
       <div className={styles.weapons}>
-        {filteredList.map((weapon) => {
-          return <WeaponSummary weapon={weapon} key={weapon.id} />;
-        })}
+        {filteredList.map((weapon) => (
+          <WeaponSummary
+            weapon={weapon}
+            key={weapon.id}
+            initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
+          />
+        ))}
       </div>
     </div>
   );

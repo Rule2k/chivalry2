@@ -6,19 +6,39 @@ import styles from "./WeaponSummary.module.scss";
 import { Container } from "@/component/common/Container/Container";
 import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
 import { notFound } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TargetSelection } from "@/component/common/WeaponSummary/components/TargetSelection/TargetSelection";
 import { Hover } from "@/component/common/WeaponSummary/components/Hover/Hover";
+import {
+  getAverageMinMaxWeaponsStats,
+  StatsValues,
+} from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
 
 interface Props {
   weapon: Weapon;
+  initialAverageMinMaxWeaponsStats: StatsValues[];
 }
 
-export const WeaponSummary = ({ weapon }: Props) => {
-  const [targetClass, setTargetClass] = useState<CharacterClass>(
-    CharacterClass.ARCHER,
+export const WeaponSummary = ({
+  weapon,
+  initialAverageMinMaxWeaponsStats,
+}: Props) => {
+  const [targetClass, setTargetClass] = useState<CharacterClass | null>(null);
+  const [averageMinMaxWeaponsStats, setUpdatedAverageMinMaxWeaponsStats] =
+    useState<StatsValues[]>(initialAverageMinMaxWeaponsStats);
+
+  useEffect(() => {
+    if (targetClass) {
+      setUpdatedAverageMinMaxWeaponsStats(
+        getAverageMinMaxWeaponsStats(targetClass),
+      );
+    }
+  }, [targetClass]);
+
+  const ratios = useMemo(
+    () => getWeaponRatio(weapon.id, targetClass, averageMinMaxWeaponsStats),
+    [averageMinMaxWeaponsStats],
   );
-  const ratios = getWeaponRatio(weapon.id, targetClass);
 
   if (!ratios) {
     notFound();

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 interface Props {
   onClick: (character: CharacterClass) => void;
-  currentTarget: CharacterClass;
+  currentTarget: CharacterClass | null;
   className?: string;
 }
 
@@ -23,7 +23,9 @@ export const TargetSelection = ({
               key={character}
               onClick={() => onClick(character)}
               className={classNames(styles.target, {
-                [styles.selected]: currentTarget === character,
+                [styles.selected]: currentTarget
+                  ? currentTarget === character
+                  : CharacterClass.ARCHER === character,
               })}
             >
               {character}
