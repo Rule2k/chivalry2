@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styles from "./Hover.module.scss";
+import classNames from "classnames";
 
 interface Props {
-  tooltipText: string;
+  tooltip: React.ReactNode;
   children: React.ReactNode;
-  direction?: "top" | "bottom" | "left" | "right";
+  direction?: "left" | "right";
 }
 
-export const Hover = ({ children, tooltipText, direction }: Props) => {
+export const Hover = ({ children, tooltip, direction }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const handleMouseEnter = () => {
     setShowTooltip(true);
@@ -23,9 +24,16 @@ export const Hover = ({ children, tooltipText, direction }: Props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div>{children}</div>
+      {children}
       {showTooltip && (
-        <div className={styles.tooltipContent}>{tooltipText}</div>
+        <div
+          className={classNames(styles.tooltipContent, {
+            [styles.leftPosition]: direction === "left",
+            [styles.rightPosition]: direction === "right",
+          })}
+        >
+          {tooltip}
+        </div>
       )}
     </div>
   );

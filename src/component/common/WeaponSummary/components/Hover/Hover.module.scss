@@ -1,20 +1,56 @@
-@import "../../../../../../config/scss/colors";
+@import "config/scss/colors";
+@import "config/scss/border";
 
 .tooltip {
   position: relative;
   height: 100%;
+  width: 100%;
   cursor: pointer;
 
   .tooltipContent {
     position: absolute;
-    background-color: $yellow;
-    color: $darkGrey;
+    background-color: $darkGrey;
+    border: 1pt solid $yellow;
+    color: $lightGrey;
     height: 100%;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     align-items: center;
-    padding: 0 6px;
-    font-weight: 700;
+    padding: 6px;
+    right: 100%;
+    white-space: nowrap;
+    width: fit-content;
+    border-radius: $borderRadius;
+  }
+
+  .leftPosition {
+    right: calc(100% + 8px);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: -12px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent transparent transparent $yellow;
+    }
+  }
+
+  .rightPosition {
+    left: calc(100% + 12px);
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -12px;
+      border-width: 6px;
+      border-style: solid;
+      border-color: transparent $yellow transparent transparent;
+    }
   }
 }
