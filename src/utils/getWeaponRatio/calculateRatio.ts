@@ -5,7 +5,7 @@ export const calculateRatio = (
   currentWeaponDamageMultiplier: number = 1,
 ): number => {
   const range = maximum - minimum;
-  const relativeValue = (current / 2) * currentWeaponDamageMultiplier - minimum;
+  const relativeValue = current * currentWeaponDamageMultiplier - minimum;
 
   return Math.round((relativeValue / range) * 100);
 };

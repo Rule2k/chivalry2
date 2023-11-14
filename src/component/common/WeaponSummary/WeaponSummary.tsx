@@ -39,11 +39,11 @@ export const WeaponSummary = ({ weapon }: Props) => {
         className={styles.targetSelection}
       />
       <div className={styles.charts}>
-        {ratios.map(({ name, value, ratio }) => {
+        {ratios.map(({ name, value, ratio, type }) => {
           return (
             <div key={name} className={styles.chart}>
               <div className={styles.chartName}>{name}</div>
-              <Hover tooltipText={`${ratio}%: ${value}`}>
+              <Hover tooltipText={`${ratio}%: ${value}${type}`}>
                 <div className={styles.progressBar}>
                   <div
                     className={styles.progressBarValue}

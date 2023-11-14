@@ -10,15 +10,13 @@ import { calculateRatio } from "@/utils/getWeaponRatio/calculateRatio";
 import { getFloorValue } from "@/utils/getWeaponRatio/getFloorValue";
 import { targetByName } from "chivalry2-weapons/dist/all_targets";
 
-interface MeleeAttackType<T extends keyof MeleeAttack> {
-  highest: MeleeAttack[T];
-  lowest: MeleeAttack[T];
+interface ValueType<T> {
+  highest: T;
+  lowest: T;
 }
 
-interface SwingType<T extends keyof Swing> {
-  highest: Swing[T];
-  lowest: Swing[T];
-}
+type MeleeAttackType<T extends keyof MeleeAttack> = ValueType<MeleeAttack[T]>;
+type SwingType<T extends keyof Swing> = ValueType<Swing[T]>;
 
 interface MinMaxWeaponStats {
   damage: MeleeAttackType<"damage">;
@@ -38,23 +36,52 @@ export const getWeaponRatio = (
 
   if (!currentWeapon || !currentTarget) return null;
 
-  const values: (keyof MinMaxWeaponStats)[] = [
-    "range",
-    "damage",
-    "windup",
-    "release",
-    "recovery",
-    "staminaDamage",
-  ];
+  const valueNameAndValueType: Record<
+    keyof MinMaxWeaponStats,
+    { name: string; isLowerBetter: boolean; type: string }
+  > = {
+    damage: {
+      name: "Average damage",
+      isLowerBetter: false,
+      type: "dmg",
+    },
+    range: {
+      name: "Average range",
+      isLowerBetter: false,
+      type: "",
+    },
+    staminaDamage: {
+      name: "Average stamina damage",
+      isLowerBetter: false,
+      type: "dmg",
+    },
+    windup: {
+      name: "Average windup time",
+      isLowerBetter: true,
+      type: "ms",
+    },
+    release: {
+      name: "Average release time",
+      isLowerBetter: true,
+      type: "ms",
+    },
+    recovery: {
+      name: "Average recovery delay",
+      isLowerBetter: true,
+      type: "ms",
+    },
+  };
 
   // get the best average numbers of all weapons
   const averageMinMaxWeaponsStats: MinMaxWeaponStats = ALL_WEAPONS.reduce(
     (acc: MinMaxWeaponStats, weapon) => {
-      const floorTypes: (keyof SwingType<any>)[] = ["lowest", "highest"];
+      const floorTypes: (keyof ValueType<any>)[] = ["lowest", "highest"];
 
       const { average } = weapon.attacks;
 
-      values.forEach((value) => {
+      (
+        Object.keys(valueNameAndValueType) as (keyof MinMaxWeaponStats)[]
+      ).forEach((value) => {
         floorTypes.forEach((floorType) => {
           acc[value][floorType] = getFloorValue(
             value === "range"
@@ -107,62 +134,34 @@ export const getWeaponRatio = (
     currentWeapon.damageType,
   );
 
-  const valueNameAndValueType: Record<
-    keyof MinMaxWeaponStats,
-    { name: string; isLowerBetter: boolean }
-  > = {
-    damage: {
-      name: "Damage",
-      isLowerBetter: false,
-    },
-    range: {
-      name: "Range",
-      isLowerBetter: false,
-    },
-    staminaDamage: {
-      name: "Stamina damage",
-      isLowerBetter: false,
-    },
-    windup: {
-      name: "Windup time",
-      isLowerBetter: true,
-    },
-    release: {
-      name: "Release time",
-      isLowerBetter: true,
-    },
-    recovery: {
-      name: "Recovery delay",
-      isLowerBetter: true,
-    },
-  };
-
-  return values.map((key) => {
-    if (key === "range") {
-      return {
-        name: "Range",
-        ratio: calculateRatio(
-          averageMinMaxWeaponsStats.range.highest,
-          averageMinMaxWeaponsStats.range.lowest,
-          average.range + average.altRange,
-        ),
-        value: Math.round((average.range + average.altRange) / 2),
-      };
-    }
+  return (
+    Object.keys(valueNameAndValueType) as (keyof MinMaxWeaponStats)[]
+  ).map((key) => {
+    const isRange = key === "range";
+    const lowestAverageValue = isRange
+      ? averageMinMaxWeaponsStats.range.lowest
+      : averageMinMaxWeaponsStats[key].lowest;
+    const highestAverageValue = isRange
+      ? averageMinMaxWeaponsStats.range.highest
+      : averageMinMaxWeaponsStats[key].highest;
+    const value1 = isRange ? average.range : average.light[key];
+    const value2 = isRange ? average.altRange : average.heavy[key];
+    const value = (value1 + value2) / 2;
 
     return {
       name: valueNameAndValueType[key].name,
       ratio: calculateRatio(
         valueNameAndValueType[key].isLowerBetter
-          ? averageMinMaxWeaponsStats[key].lowest
-          : averageMinMaxWeaponsStats[key].highest,
+          ? lowestAverageValue
+          : highestAverageValue,
         valueNameAndValueType[key].isLowerBetter
-          ? averageMinMaxWeaponsStats[key].highest
-          : averageMinMaxWeaponsStats[key].lowest,
-        average.light[key] + average.heavy[key],
+          ? highestAverageValue
+          : lowestAverageValue,
+        value,
         key === "damage" ? currentWeaponDamageMultiplier : 1,
       ),
-      value: Math.round((average.light[key] + average.heavy[key]) / 2),
+      value: Math.round(value),
+      type: valueNameAndValueType[key].type,
     };
   });
 };
