@@ -17,11 +17,13 @@ import {
 interface Props {
   weapon: Weapon;
   initialAverageMinMaxWeaponsStats: StatsValues[];
+  className?: string;
 }
 
 export const WeaponSummary = ({
   weapon,
   initialAverageMinMaxWeaponsStats,
+  className,
 }: Props) => {
   const [targetClass, setTargetClass] = useState<CharacterClass | null>(null);
   const [averageMinMaxWeaponsStats, setUpdatedAverageMinMaxWeaponsStats] =
@@ -45,7 +47,7 @@ export const WeaponSummary = ({
   }
 
   return (
-    <Container>
+    <Container className={className}>
       <CustomButton
         key={weapon.id}
         href={`${routes.weapon}/${weapon.id}`}

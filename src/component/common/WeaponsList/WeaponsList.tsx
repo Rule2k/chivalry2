@@ -43,6 +43,7 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
             weapon={weapon}
             key={weapon.id}
             initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
+            className={styles.weaponSummary}
           />
         ))}
       </div>

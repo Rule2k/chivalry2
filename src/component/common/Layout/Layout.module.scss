@@ -11,12 +11,15 @@
   justify-content: center;
   font-size: 16px;
 
+  * {
+    box-sizing: border-box;
+  }
+
   .body {
-    padding: 0 32px 32px;
     background-color: rgba($darkGrey, .9);
     color: $lightGrey;
     width: 100%;
-    max-width: 1024px;
+    max-width: 1440px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -34,8 +37,7 @@
 
     .content {
       width: 100%;
-      padding: 0 32px;
-      max-width: 600px;
+      padding: 32px;
     }
 
     .footer {
