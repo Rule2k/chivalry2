@@ -1,6 +1,6 @@
 import type {NextRequest} from "next/server";
 import {NextResponse} from "next/server";
-import {routes} from "../config/next/routes";
+import {routes} from "@/config/next/routes";
 
 // all dynamicSegment of the routes are written in lowerCase as to have consistent URLs
 // but since theses segmentName are the keys of an enum to map them to the correct classes / subclasses

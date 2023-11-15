@@ -1,5 +1,5 @@
 import { CharacterClass } from "chivalry2-weapons";
-import { routes } from "../../../../config/next/routes";
+import { routes } from "@/config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./Homepage.module.scss";
 import { Container } from "@/component/common/Container/Container";

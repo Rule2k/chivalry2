@@ -2,10 +2,14 @@
 import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
 import { Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponsList.module.scss";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchInput } from "@/component/common/WeaponsList/SearchInput/SearchInput";
 import classNames from "classnames";
-import { getAverageMinMaxWeaponsStats } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  selectGetAverageMinMaxWeaponsStats,
+  updateMinMaxWeaponsStats,
+} from "@/store/features/minMaxWeaponsStats/minMaxWeaponsStats";
 
 interface Props {
   weaponsList: Weapon[];
@@ -25,10 +29,17 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
     );
   };
 
-  const averageMinMaxWeaponsStats = useMemo(
-    () => getAverageMinMaxWeaponsStats(),
-    [],
+  const averageMinMaxWeaponsStats = useAppSelector(
+    selectGetAverageMinMaxWeaponsStats,
   );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!averageMinMaxWeaponsStats.length) {
+      dispatch(updateMinMaxWeaponsStats({}));
+    }
+  }, []);
 
   return (
     <div className={classNames(styles.weaponsList, className)}>
@@ -42,7 +53,7 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
           <WeaponSummary
             weapon={weapon}
             key={weapon.id}
-            initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
+            averageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
             className={styles.weaponSummary}
           />
         ))}
