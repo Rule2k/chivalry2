@@ -8,11 +8,11 @@ import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
 import { notFound } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { TargetSelection } from "@/component/common/WeaponSummary/components/TargetSelection/TargetSelection";
-import { Hover } from "@/component/common/WeaponSummary/components/Hover/Hover";
 import {
   getAverageMinMaxWeaponsStats,
   StatsValues,
 } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
+import { WeaponRatios } from "@/component/common/WeaponSummary/components/WeaponRatios/WeaponRatios";
 
 interface Props {
   weapon: Weapon;
@@ -61,33 +61,7 @@ export const WeaponSummary = ({
         className={styles.targetSelection}
       />
       <div className={styles.charts}>
-        {ratios.map(({ name, value, ratio, type }, index) => {
-          return (
-            <div key={name} className={styles.chart}>
-              <div className={styles.chartName}>{name}</div>
-              <Hover
-                tooltip={
-                  <div className={styles.tooltip}>
-                    <span className={styles.ratio}>Top {ratio}% :</span>{" "}
-                    <span className={styles.value}>
-                      {value} {type}
-                    </span>
-                  </div>
-                }
-                direction={index >= ratios.length / 2 ? "right" : "left"}
-              >
-                <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressBarValue}
-                    style={{
-                      width: `${ratio}%`,
-                    }}
-                  />
-                </div>
-              </Hover>
-            </div>
-          );
-        })}
+        <WeaponRatios ratios={ratios} />
       </div>
     </Container>
   );
