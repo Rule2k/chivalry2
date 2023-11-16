@@ -1,4 +1,5 @@
 "use client";
+import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import { CharacterClass, Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponSummary.module.scss";
@@ -8,31 +9,33 @@ import { notFound } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { TargetSelection } from "@/component/common/WeaponSummary/components/TargetSelection/TargetSelection";
 import { Hover } from "@/component/common/WeaponSummary/components/Hover/Hover";
-import { useAppDispatch } from "@/store/hooks";
-import { updateMinMaxWeaponsStats } from "@/store/features/minMaxWeaponsStats/minMaxWeaponsStats";
-import { StatsValues } from "@/interfaces/statsValues";
-import { routes } from "@/config/next/routes";
+import {
+  getAverageMinMaxWeaponsStats,
+  StatsValues,
+} from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
 
 interface Props {
   weapon: Weapon;
-  averageMinMaxWeaponsStats: StatsValues[];
+  initialAverageMinMaxWeaponsStats: StatsValues[];
   className?: string;
 }
 
 export const WeaponSummary = ({
   weapon,
-  averageMinMaxWeaponsStats,
+  initialAverageMinMaxWeaponsStats,
   className,
 }: Props) => {
   const [targetClass, setTargetClass] = useState<CharacterClass | null>(null);
-
-  const dispatch = useAppDispatch();
+  const [averageMinMaxWeaponsStats, setUpdatedAverageMinMaxWeaponsStats] =
+    useState<StatsValues[]>(initialAverageMinMaxWeaponsStats);
 
   useEffect(() => {
     if (targetClass) {
-      dispatch(updateMinMaxWeaponsStats({ targetClass }));
+      setUpdatedAverageMinMaxWeaponsStats(
+        getAverageMinMaxWeaponsStats(targetClass),
+      );
     }
-  }, [dispatch, targetClass]);
+  }, [targetClass]);
 
   const ratios = useMemo(
     () => getWeaponRatio(weapon.id, targetClass, averageMinMaxWeaponsStats),

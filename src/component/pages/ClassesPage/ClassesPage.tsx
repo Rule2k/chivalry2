@@ -5,7 +5,7 @@ import {
   CharacterSubclass,
 } from "chivalry2-weapons/dist";
 import { notFound } from "next/navigation";
-import { routes } from "@/config/next/routes";
+import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
 import styles from "./ClassesPage.module.scss";
 import { Links } from "@/component/common/Links/Links";

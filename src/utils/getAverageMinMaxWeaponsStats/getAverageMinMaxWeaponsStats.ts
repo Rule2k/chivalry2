@@ -1,9 +1,39 @@
-import { ALL_WEAPONS, CharacterClass } from "chivalry2-weapons/dist";
+import {
+  ALL_WEAPONS,
+  CharacterClass,
+  MeleeAttack,
+} from "chivalry2-weapons/dist";
 import { getFloorValue } from "@/utils/getAverageMinMaxWeaponsStats/getFloorValue";
+import { Swing } from "chivalry2-weapons/dist/weapon";
 import { targetByName } from "chivalry2-weapons/dist/all_targets";
-import { StatsValues } from "@/interfaces/statsValues";
 
-const initialMinMaxWeaponsStats: StatsValues[] = [
+interface ValueType<T> {
+  highest: T;
+  lowest: T;
+}
+
+type MeleeAttackType<T extends keyof MeleeAttack> = ValueType<MeleeAttack[T]>;
+type SwingType<T extends keyof Swing> = ValueType<Swing[T]>;
+
+interface MinMaxWeaponStats {
+  damage: MeleeAttackType<"damage">;
+  range: SwingType<"range"> | SwingType<"altRange">;
+  staminaDamage: MeleeAttackType<"staminaDamage">;
+  windup: MeleeAttackType<"windup">;
+  release: MeleeAttackType<"release">;
+  recovery: MeleeAttackType<"recovery">;
+}
+
+export interface StatsValues {
+  name: string;
+  isLowerBetter: boolean;
+  type: "dmg" | "ms" | "";
+  id: keyof MinMaxWeaponStats;
+  highest: number;
+  lowest: number;
+}
+
+const values: StatsValues[] = [
   {
     name: "Average damage",
     isLowerBetter: false,
@@ -53,13 +83,14 @@ const initialMinMaxWeaponsStats: StatsValues[] = [
     lowest: Infinity,
   },
 ];
+
 export const getAverageMinMaxWeaponsStats = (targetClass?: CharacterClass) => {
   const currentTarget = targetClass && targetByName(targetClass);
 
   return ALL_WEAPONS.reduce((acc, weapon) => {
     const { average } = weapon.attacks;
 
-    initialMinMaxWeaponsStats.forEach(
+    values.forEach(
       ({ id, isLowerBetter, type, lowest, name, highest }, index) => {
         const currentTargetDamageMultiplier =
           id === "damage" && currentTarget

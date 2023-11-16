@@ -1,6 +1,6 @@
 "use client";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
-import { routes } from "@/config/next/routes";
+import { routes } from "../../../../config/next/routes";
 import styles from "./Links.module.scss";
 
 interface Props {
