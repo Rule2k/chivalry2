@@ -5,6 +5,7 @@ import { Volkhov } from "next/font/google";
 import classNames from "classnames";
 import { Header } from "@/component/common/Header/Header";
 import { Footer } from "@/component/common/Footer/Footer";
+import { Providers } from "@/context/Providers";
 
 const volkhov = Volkhov({
   subsets: ["latin"],
@@ -27,7 +28,9 @@ export const Layout = ({
     <html lang="en" className={classNames(styles.root, volkhov.className)}>
       <body className={styles.body}>
         <Header />
-        <div className={styles.content}>{children}</div>
+        <div className={styles.content}>
+          <Providers>{children}</Providers>
+        </div>
         <Footer className={styles.footer} />
       </body>
     </html>

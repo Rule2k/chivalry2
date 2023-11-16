@@ -2,10 +2,10 @@
 import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
 import { Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponsList.module.scss";
-import { useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { SearchInput } from "@/component/common/WeaponsList/SearchInput/SearchInput";
 import classNames from "classnames";
-import { getAverageMinMaxWeaponsStats } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
+import { AverageMinMaxWeaponsStatsContext } from "@/context/averageMinMaxWeaponsStats/AverageMinMaxWeaponsStats";
 
 interface Props {
   weaponsList: Weapon[];
@@ -25,9 +25,8 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
     );
   };
 
-  const averageMinMaxWeaponsStats = useMemo(
-    () => getAverageMinMaxWeaponsStats(),
-    [],
+  const { averageMinMaxWeaponsStats } = useContext(
+    AverageMinMaxWeaponsStatsContext,
   );
 
   return (

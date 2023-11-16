@@ -1,10 +1,11 @@
+"use client";
 import { weaponById } from "chivalry2-weapons/dist";
 import { notFound } from "next/navigation";
 import styles from "./WeaponsPage.module.scss";
 import { Links } from "@/component/common/Links/Links";
 import { WeaponSummary } from "@/component/common/WeaponSummary/WeaponSummary";
-import { useMemo } from "react";
-import { getAverageMinMaxWeaponsStats } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
+import { useContext } from "react";
+import { AverageMinMaxWeaponsStatsContext } from "@/context/averageMinMaxWeaponsStats/AverageMinMaxWeaponsStats";
 
 interface Props {
   params: {
@@ -19,9 +20,8 @@ export const WeaponsPage = ({ params: { weaponId } }: Props) => {
     notFound();
   }
 
-  const averageMinMaxWeaponsStats = useMemo(
-    () => getAverageMinMaxWeaponsStats(),
-    [],
+  const { averageMinMaxWeaponsStats } = useContext(
+    AverageMinMaxWeaponsStatsContext,
   );
 
   return (
