@@ -4,7 +4,7 @@ import classNames from "classnames";
 interface Props {
   onChange: (value: string) => void;
   currentValue: string;
-  className: string;
+  className?: string;
 }
 
 export const SearchInput = ({ onChange, currentValue, className }: Props) => {
