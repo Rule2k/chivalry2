@@ -4,7 +4,7 @@ import styles from "./CustomButton.module.scss";
 import classNames from "classnames";
 
 interface Props {
-  href: string;
+  href: string | null;
   alternativeStyle?: boolean;
   children: React.ReactNode;
   className?: string;
@@ -15,17 +15,21 @@ export const CustomButton = ({
   alternativeStyle = false,
   children,
   className,
-}: Props) => (
-  <Link
-    href={href}
-    className={classNames(
-      styles.link,
-      {
-        [styles.alternativeLink]: alternativeStyle,
-      },
-      className,
-    )}
-  >
-    <div>{children}</div>
-  </Link>
-);
+}: Props) => {
+  return href ? (
+    <Link
+      href={href}
+      className={classNames(
+        styles.link,
+        {
+          [styles.alternativeLink]: alternativeStyle,
+        },
+        className,
+      )}
+    >
+      {children}
+    </Link>
+  ) : (
+    <div className={classNames(styles.link, className)}>{children}</div>
+  );
+};

@@ -10,9 +10,14 @@ import { AverageMinMaxWeaponsStatsContext } from "@/context/averageMinMaxWeapons
 interface Props {
   weaponsList: Weapon[];
   className?: string;
+  compareModeChild?: boolean;
 }
 
-export const WeaponsList = ({ weaponsList, className }: Props) => {
+export const WeaponsList = ({
+  weaponsList,
+  className,
+  compareModeChild,
+}: Props) => {
   const [filteredList, setFilteredList] = useState<Weapon[]>(weaponsList);
   const [currentSearchValue, setSearchCurrentValue] = useState<string>("");
 
@@ -35,6 +40,11 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
         onChange={handleSearch}
         currentValue={currentSearchValue}
         className={styles.searchInput}
+        title={
+          compareModeChild
+            ? "Compare to a specific weapon:"
+            : "Filter your weapons:"
+        }
       />
       <div className={styles.weapons}>
         {filteredList.map((weapon) => (
@@ -43,6 +53,7 @@ export const WeaponsList = ({ weaponsList, className }: Props) => {
             key={weapon.id}
             initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
             className={styles.weaponSummary}
+            compareModeChild={compareModeChild}
           />
         ))}
       </div>

@@ -30,6 +30,7 @@ export const WeaponsPage = ({ params: { weaponId } }: Props) => {
       <WeaponSummary
         weapon={weapon}
         initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
+        isCompareMode
       />
       <Links />
     </main>

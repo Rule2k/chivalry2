@@ -5,12 +5,18 @@ interface Props {
   onChange: (value: string) => void;
   currentValue: string;
   className?: string;
+  title: string;
 }
 
-export const SearchInput = ({ onChange, currentValue, className }: Props) => {
+export const SearchInput = ({
+  onChange,
+  currentValue,
+  className,
+  title,
+}: Props) => {
   return (
     <div className={classNames(styles.searchInput, className)}>
-      <h2>Filter your weapons:</h2>
+      <h2>{title}</h2>
       <div>
         <input
           type="text"
