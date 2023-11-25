@@ -43,3 +43,7 @@ $verticalGap: 16px;
 .compareModeChild {
   cursor: pointer;
 }
+
+.isSelected {
+  border: $yellow solid 2px;
+}

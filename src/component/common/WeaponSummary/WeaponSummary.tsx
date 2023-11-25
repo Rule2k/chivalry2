@@ -1,7 +1,7 @@
 "use client";
 import { routes } from "../../../../config/next/routes";
 import { CustomButton } from "@/component/common/CustomButton/CustomButton";
-import { ALL_WEAPONS, CharacterClass, Weapon } from "chivalry2-weapons/dist";
+import { CharacterClass, Weapon } from "chivalry2-weapons/dist";
 import styles from "./WeaponSummary.module.scss";
 import { Container } from "@/component/common/Container/Container";
 import { getWeaponRatio } from "@/utils/getWeaponRatio/getWeaponRatio";
@@ -13,34 +13,28 @@ import {
   StatsValues,
 } from "@/utils/getAverageMinMaxWeaponsStats/getAverageMinMaxWeaponsStats";
 import { WeaponRatios } from "@/component/common/WeaponSummary/components/WeaponRatios/WeaponRatios";
-import { WeaponsList } from "@/component/common/WeaponsList/WeaponsList";
 import classNames from "classnames";
 
 interface Props {
   weapon: Weapon;
   initialAverageMinMaxWeaponsStats: StatsValues[];
   isCompareMode?: boolean;
-  compareModeChild?: boolean;
   className?: string;
   onClick?: (weapon: string) => void;
+  isSelected?: boolean;
 }
 
 export const WeaponSummary = ({
   weapon,
   initialAverageMinMaxWeaponsStats,
   isCompareMode = false,
-  compareModeChild = false,
+  onClick,
   className,
+  isSelected,
 }: Props) => {
   const [targetClass, setTargetClass] = useState<CharacterClass | null>(null);
-  useState<Weapon | null>(null);
   const [averageMinMaxWeaponsStats, setUpdatedAverageMinMaxWeaponsStats] =
     useState<StatsValues[]>(initialAverageMinMaxWeaponsStats);
-  const [compareTargetWeapon, setCompareTargetWeapon] = useState<string | null>(
-    null,
-  );
-
-  console.log(compareTargetWeapon);
 
   useEffect(() => {
     if (targetClass) {
@@ -62,21 +56,25 @@ export const WeaponSummary = ({
   return (
     <div className={classNames(styles.root, className)}>
       <Container
-        {...(compareModeChild
-          ? { onClick: () => setCompareTargetWeapon(weapon.id) }
+        {...(onClick ? { onClick: () => onClick(weapon.id) } : {})}
+        {...(isCompareMode
+          ? {
+              className: classNames(styles.compareModeChild, {
+                [styles.isSelected]: isSelected,
+              }),
+            }
           : {})}
-        {...(compareModeChild ? { className: styles.compareModeChild } : {})}
       >
         <CustomButton
           key={weapon.id}
-          {...(compareModeChild
+          {...(isCompareMode
             ? { href: null }
             : { href: `${routes.weapon}/${weapon.id}` })}
           className={styles.link}
         >
           {weapon.name}
         </CustomButton>
-        {!compareModeChild && (
+        {!isCompareMode && (
           <TargetSelection
             onClick={setTargetClass}
             currentTarget={targetClass}
@@ -87,9 +85,6 @@ export const WeaponSummary = ({
           <WeaponRatios ratios={ratios} />
         </div>
       </Container>
-      {isCompareMode && (
-        <WeaponsList weaponsList={ALL_WEAPONS} compareModeChild />
-      )}
     </div>
   );
 };

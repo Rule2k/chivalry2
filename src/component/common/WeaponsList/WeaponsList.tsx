@@ -10,14 +10,19 @@ import { AverageMinMaxWeaponsStatsContext } from "@/context/averageMinMaxWeapons
 interface Props {
   weaponsList: Weapon[];
   className?: string;
-  compareModeChild?: boolean;
+  isCompareMode?: boolean;
+  selectedWeapon?: string | null;
+  setSelectedWeapon?: (weapon: string) => void;
 }
 
 export const WeaponsList = ({
   weaponsList,
   className,
-  compareModeChild,
+  isCompareMode,
+  selectedWeapon,
+  setSelectedWeapon,
 }: Props) => {
+  console.log({ selectedWeapon });
   const [filteredList, setFilteredList] = useState<Weapon[]>(weaponsList);
   const [currentSearchValue, setSearchCurrentValue] = useState<string>("");
 
@@ -41,7 +46,7 @@ export const WeaponsList = ({
         currentValue={currentSearchValue}
         className={styles.searchInput}
         title={
-          compareModeChild
+          isCompareMode
             ? "Compare to a specific weapon:"
             : "Filter your weapons:"
         }
@@ -53,7 +58,9 @@ export const WeaponsList = ({
             key={weapon.id}
             initialAverageMinMaxWeaponsStats={averageMinMaxWeaponsStats}
             className={styles.weaponSummary}
-            compareModeChild={compareModeChild}
+            isCompareMode={isCompareMode}
+            onClick={setSelectedWeapon}
+            isSelected={selectedWeapon === weapon.id}
           />
         ))}
       </div>
