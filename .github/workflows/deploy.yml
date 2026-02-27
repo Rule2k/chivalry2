@@ -18,6 +18,8 @@ jobs:
           script: |
             cd /var/www/chivalry2
             git pull origin main
-            npm install
-            npm run build
-            pm2 restart chivalry2
+            docker build -t chivalry2 .
+            docker stop chivalry2 || true
+            docker rm chivalry2 || true
+            docker run -d --name chivalry2 -p 3000:3000 --restart unless-stopped chivalry2
+
